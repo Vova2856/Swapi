@@ -24,4 +24,3 @@ class SWAPIClient:
 
         return results
 
-1

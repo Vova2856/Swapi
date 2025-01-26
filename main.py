@@ -24,4 +24,3 @@ if __name__ == "__main__":
 
 
     manager.save_to_excel('data/swapi_data.xlsx')
-3
