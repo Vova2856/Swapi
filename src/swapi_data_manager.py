@@ -29,3 +29,4 @@ class SWAPIDataManager:
                 df.to_excel(writer, sheet_name=endpoint, index=False)
                 logger.info(f"Дані з {endpoint} збережено в Excel.")
 
+2
