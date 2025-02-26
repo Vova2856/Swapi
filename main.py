@@ -4,12 +4,12 @@ import logging
 import os
 import argparse
 
-# Налаштування логера
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
-# Базовий клієнт для роботи з API
+
 class SWAPIClient:
     def __init__(self, path: str):
         self.base_url = path
@@ -32,19 +32,12 @@ class SWAPIClient:
 # Клієнт для роботи з даними з Excel
 class ExcelSWAPIClient(SWAPIClient):
     def __init__(self, path: str):
-        """
-        Ініціалізація з шляхом до Excel-файлу.
-        """
+
         super().__init__(path)
         self.data = pd.read_excel(path, sheet_name=None)
 
     def fetch_json(self, endpoint: str) -> list:
-        """
-        Завантажує дані з Excel-файлу для вказаного endpoint.
 
-        :param endpoint: Назва листа в Excel (наприклад, "people")
-        :return: список всіх сутностей у вигляді JSON
-        """
         if endpoint not in self.data:
             logger.warning(f"Endpoint {endpoint} not found in {self.base_url}")
             return []
@@ -52,7 +45,7 @@ class ExcelSWAPIClient(SWAPIClient):
         return self.data[endpoint].to_dict(orient='records')
 
 
-# Менеджер даних
+
 class SWAPIDataManager:
     def __init__(self, client):
         self.client = client
@@ -78,7 +71,7 @@ class SWAPIDataManager:
         logger.info("Дані успішно записано у Excel.")
 
 
-# Функція для вибору клієнта
+
 def get_client(input_source: str):
     if input_source.startswith("http"):
         return SWAPIClient(input_source)
@@ -88,7 +81,7 @@ def get_client(input_source: str):
         raise ValueError("Невідомий формат джерела даних")
 
 
-# Основна функція
+
 def main():
     parser = argparse.ArgumentParser(description="SWAPI Data Manager")
     parser.add_argument('--input', required=True, help="URL або шлях до Excel файлу")
@@ -97,15 +90,15 @@ def main():
 
     args = parser.parse_args()
 
-    # Вибір клієнта для підключення до джерела
+
     client = get_client(args.input)
     manager = SWAPIDataManager(client)
 
-    # Завантаження даних з зазначених endpoint'ів
+
     for endpoint in args.endpoint.split(','):
         manager.fetch_entity(endpoint)
 
-    # Запис результатів у Excel файл
+
     manager.save_to_excel(args.output)
 
 
